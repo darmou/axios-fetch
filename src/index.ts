@@ -24,10 +24,10 @@ async function axiosFetch (
   init: FetchInit = {}
 ) {
   const rawHeaders: Record<string, string> = init.headers || {};
-  const lowerCasedHeaders = Object.keys(rawHeaders)
+  const lowerCasedHeaders = Object.keys(rawHeaders).filter(key => rawHeaders[key])
     .reduce<Record<string, string>>(
       (acc, key) => {
-        acc[key.toLowerCase()] = rawHeaders[key] || '';
+        acc[key.toLowerCase()] = rawHeaders[key];
         return acc;
       },
       {}

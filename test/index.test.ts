@@ -98,6 +98,26 @@ test('respects the headers init option', async (test) => {
   test.deepEqual(axiosBody.testheader, expectedBody.testheader);
 });
 
+test('ensure any headers set to null are not added', async (test) => {
+  const init: FetchInit = {
+    method: 'POST',
+    headers: {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      'testheader': null
+    }
+  };
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/headers`, init);
+  const client = axios.create();
+  const requestSpy = sinon.spy(client, 'request');
+  const axiosFetch = buildAxiosFetch(client);
+  await axiosFetch(`${TEST_URL_ROOT}/headers`, init);
+  console.log('requestSpy', JSON.stringify(requestSpy, null, 2));
+  const expectedBody = await expectedResponse.json();
+  const axiosBody = await axiosResponse.json();
+  test.deepEqual(axiosBody.testheader, expectedBody.testheader);
+});
+
 test('handles text body init options', async (test) => {
   const init: FetchInit = {
     method: 'POST',
